@@ -1,0 +1,63 @@
+#%% importar coisas
+import pandas as pd
+from sklearn.linear_model import LinearRegression
+
+#%% funcao de preparar os dados que serao utilizados no calculo
+def prepararDados():
+    wheys = pd.read_excel('qtd_doseWhey.xlsx')
+
+    colunas_calculo = ['sabor', 'tipo_proteina', 'lactose', 'acucar_total_100g', 'gordura_total_100g', 'bcaa_100g', 'taxa_acne']
+
+    wheys_filtrado = wheys[colunas_calculo]
+
+    #joga fora qualquer linha que tenha células vazias
+    wheys_filtrado = wheys_filtrado.dropna()
+
+    #one-Hot Encoding (transforma textos em colunas numéricas de 0 e 1)
+    wheys_numerico = pd.get_dummies(wheys_filtrado, columns=['sabor', 'tipo_proteina'])
+
+    #separa o X (características) do y (o alvo/resultado)
+    X = wheys_numerico.drop('taxa_acne', axis=1) # O X ganha tudo, menos a taxa de acne
+    y = wheys_numerico['taxa_acne']              # O y ganha APENAS a taxa de acne
+
+    #ve se deu certo no terminal
+    print("\nDados preparados com sucesso!")
+    print(f"O modelo vai estudar {len(X.columns)} características para prever a acne.")
+ 
+    return X, y
+
+#%%chamando a função para testar
+X_treino, y_treino = prepararDados()
+print("\nPrimeiras linhas do X (veja as colunas novas de 0 e 1):")
+print(X_treino.head())
+#%% TREINANDO O MODELO
+
+#instanciar o algoritmo matemático 
+modelo = LinearRegression()
+
+#entrega as perguntas (X_treino) e as respostas (y_treino) para ele estudar
+#descobre os pesos biológicos de cada ingrediente do Whey
+modelo.fit(X_treino, y_treino)
+
+#avaliar a própria precisão do cálculo que acabou de criar
+precisao = modelo.score(X_treino, y_treino)
+
+print("\n--- TREINAMENTO CONCLUÍDO ---")
+print(f"O modelo aprendeu a fórmula matemática com sucesso!")
+print(f"A precisão (Score R²) do modelo nos dados atuais é de: {precisao:.2f}")
+
+#%% SALVANDO O MODELO PARA USO FUTURO
+
+#importa a ferramenta de salvar arquivos de ML
+import joblib
+
+#salva o modelo treinado no "modelo_whey.pkl"
+joblib.dump(modelo, 'modelo_whey.pkl')
+
+#salva a estrutura de colunas do X_treino
+joblib.dump(X_treino.columns, 'colunas_treino.pkl')
+
+print("\n--- MODELO SALVO COM SUCESSO! ---")
+print("Os arquivos 'modelo_whey.pkl' e 'colunas_treino.pkl' foram criados na sua pasta.")
+
+#%%
