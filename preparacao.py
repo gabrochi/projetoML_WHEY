@@ -20,7 +20,7 @@ def prepararDados():
     X = wheys_numerico.drop('taxa_acne', axis=1) # O X ganha tudo, menos a taxa de acne
     y = wheys_numerico['taxa_acne']              # O y ganha APENAS a taxa de acne
 
-    #ve se deu certo no terminal
+    #verifica se deu certo no terminal
     print("\nDados preparados com sucesso!")
     print(f"O modelo vai estudar {len(X.columns)} características para prever a acne.")
  

@@ -54,7 +54,7 @@ else:
         #monta o produto para o modelo (1 linha cheia de ZEROS)
         whey_usuario = pd.DataFrame(0, index=[0], columns=colunas_treino)
 
-        #liga os botões do "One-Hot Encoding" de forma dinâmica
+        #liga os botões do One-Hot Encoding de forma dinâmica
         coluna_sabor = f"sabor_{sabor_escolhido}"
         coluna_tipo = f"tipo_proteina_{tipo_escolhido}"
 
@@ -64,7 +64,6 @@ else:
             whey_usuario[coluna_tipo] = 1
 
         #puxa os nutrientes exatos da tabela para a previsão
-        whey_usuario['lactose'] = whey_real['lactose']
         whey_usuario['acucar_total_100g'] = whey_real['acucar_total_100g']
         whey_usuario['gordura_total_100g'] = whey_real['gordura_total_100g']
         whey_usuario['bcaa_100g'] = whey_real['bcaa_100g']
